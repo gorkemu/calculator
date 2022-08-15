@@ -8,14 +8,20 @@ let displayTop = document.querySelector('#display-top');
 let displayMiddle = document.querySelector('#display-middle');
 let displayBottom = document.querySelector('#display-bottom');
 
-numberButtons.forEach(button =>
+numberButtons.forEach(button => {
+
     button.addEventListener('click', () => {
         if (displayBottom.textContent === '0') {
             resetDisplay();
         }
         displayBottom.textContent += button.textContent;
-    }
-    ));
+
+        if(displayBottom.textContent.length > 9) {
+            displayBottom.textContent = displayBottom.textContent.substring(0, 9);
+        }
+    })
+}
+);
 
 operatorButtons.forEach(button =>
     button.addEventListener('click', () => {
@@ -33,12 +39,9 @@ operatorButtons.forEach(button =>
             lastOperator = button.textContent;
         }
     }));
-    
+
 equalsButton.addEventListener('click', () => {
     displayBottom.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
-    if (displayBottom.textContent.length > 12) {
-        displayBottom.textContent = Number(displayBottom.textContent);
-    }
     displayTop.textContent = '';
     displayMiddle.textContent = '';
 });
