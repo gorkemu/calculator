@@ -16,8 +16,8 @@ numberButtons.forEach(button => {
         }
         displayBottom.textContent += button.textContent;
 
-        if (displayBottom.textContent.length > 9) {
-            displayBottom.textContent = displayBottom.textContent.substring(0, 9);
+        if (displayBottom.textContent.length > 16) {
+            displayBottom.textContent = displayBottom.textContent.substring(0, 16);
         }
     })
 }
@@ -42,10 +42,8 @@ operatorButtons.forEach(button =>
 
 equalsButton.addEventListener('click', () => {
     displayBottom.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
-    if (Number(displayBottom.textContent) > 999999999 
-    || Number(displayBottom.textContent) < -999999999 
-    || displayBottom.textContent.length > 9) {
-        displayBottom.textContent = (Number(displayBottom.textContent)).toPrecision(9);
+    if (displayBottom.textContent.length > 16) {
+        displayBottom.textContent = (Number(displayBottom.textContent)).toPrecision(12);
     }
     displayTop.textContent = '';
     displayMiddle.textContent = '';
