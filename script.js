@@ -16,7 +16,7 @@ numberButtons.forEach(button => {
         }
         displayBottom.textContent += button.textContent;
 
-        if(displayBottom.textContent.length > 9) {
+        if (displayBottom.textContent.length > 9) {
             displayBottom.textContent = displayBottom.textContent.substring(0, 9);
         }
     })
@@ -32,7 +32,7 @@ operatorButtons.forEach(button =>
             lastOperator = button.textContent;
             displayMiddle.textContent = button.textContent;
         }
-        else {
+        else if (displayBottom.textContent !== '') {
             displayMiddle.textContent = button.textContent;
             displayTop.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
             displayBottom.textContent = '';
@@ -42,6 +42,11 @@ operatorButtons.forEach(button =>
 
 equalsButton.addEventListener('click', () => {
     displayBottom.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
+    if (Number(displayBottom.textContent) > 999999999 
+    || Number(displayBottom.textContent) < -999999999 
+    || displayBottom.textContent.length > 9) {
+        displayBottom.textContent = (Number(displayBottom.textContent)).toPrecision(9);
+    }
     displayTop.textContent = '';
     displayMiddle.textContent = '';
 });
@@ -68,7 +73,7 @@ function operate(operator, a, b) {
         case 'x':
             return multiply(a, b);
         case '÷':
-            if (b === 0) {
+            if (b === Number(0)) {
                 displayMiddle.textContent = '';
                 alert("You can't divide by 0!");
                 return null;
