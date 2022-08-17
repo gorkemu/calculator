@@ -57,19 +57,6 @@ main {
     font-weight: 600;
 }
 
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
-
-button {
-    height: 60px;
-    font-size: 2.4em;
-    border: 1.5px solid black;
-    border-radius: 8px;
-}
-
 .display {
     display: flex;
     flex-direction: column;
@@ -98,17 +85,36 @@ button {
     height: 48px;
 }
 
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+button {
+    font-size: 2.4em;
+    border: 1.5px solid black;
+    border-radius: 8px;
+}
+
 .operator-btn,
-#equals-btn {
+#equals-btn,
+#decimal-btn,
+#c-btn {
     background-color: lightgray;
 }
 
-#clear-btn {
+#ac-btn {
     background-color: rgb(180, 27, 27);
     color: aliceblue;
+    grid-column: auto / span 2;
 }
 
 .number-btn {
     background-color: darkgray;
     color: aliceblue;
+}
+
+#plus {
+    grid-row: auto / span 2;
 }
