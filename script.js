@@ -1,7 +1,9 @@
 const numberButtons = document.querySelectorAll('.number-btn');
 const operatorButtons = document.querySelectorAll('.operator-btn');
 const equalsButton = document.getElementById('equals-btn');
-const clearButton = document.getElementById('clear-btn');
+const allClearButton = document.getElementById('ac-btn');
+const decimalButton = document.getElementById('decimal-btn');
+const clearButton = document.getElementById('c-btn');
 
 let lastOperator = '';
 let displayTop = document.querySelector('#display-top');
@@ -11,10 +13,9 @@ let displayBottom = document.querySelector('#display-bottom');
 numberButtons.forEach(button => {
 
     button.addEventListener('click', () => {
-        if (displayBottom.textContent === '0') {
-            resetDisplay();
+        if (lastOperator !== '=') {
+            displayBottom.textContent += button.textContent;
         }
-        displayBottom.textContent += button.textContent;
 
         if (displayBottom.textContent.length > 16) {
             displayBottom.textContent = displayBottom.textContent.substring(0, 16);
@@ -26,39 +27,60 @@ numberButtons.forEach(button => {
 operatorButtons.forEach(button =>
     button.addEventListener('click', () => {
 
-        if (displayTop.textContent === '') {
+        if (displayTop.textContent === '' && displayBottom.textContent !== '') {
             displayTop.textContent = displayBottom.textContent;
             displayBottom.textContent = '';
+            displayMiddle.textContent = button.textContent;
             lastOperator = button.textContent;
-            displayMiddle.textContent = button.textContent;
         }
-        else if (displayBottom.textContent !== '') {
-            displayMiddle.textContent = button.textContent;
+        else if (displayBottom.textContent !== ''
+            && displayBottom.textContent !== '.') {
             displayTop.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
+            displayMiddle.textContent = button.textContent;
             displayBottom.textContent = '';
             lastOperator = button.textContent;
         }
     }));
 
 equalsButton.addEventListener('click', () => {
-    displayBottom.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
-    if (displayBottom.textContent.length > 16) {
-        displayBottom.textContent = (Number(displayBottom.textContent)).toPrecision(12);
+    if (displayTop.textContent !== ''
+        && displayBottom.textContent !== ''
+        && displayBottom.textContent !== '.') {
+        displayBottom.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
+
+        if (displayBottom.textContent.length > 16) {
+            if (Number(displayBottom.textContent) < 0.001
+                || Number(displayBottom.textContent) > -0.001) {
+                displayBottom.textContent = parseFloat(Number(displayBottom.textContent).toPrecision(9)).toString();
+            } else {
+                displayBottom.textContent = parseFloat(Number(displayBottom.textContent).toPrecision(12)).toString();
+            }
+        }
+        displayTop.textContent = '';
+        displayMiddle.textContent = '';
+        lastOperator = '=';
     }
+});
+
+allClearButton.addEventListener('click', () => {
     displayTop.textContent = '';
     displayMiddle.textContent = '';
+    displayBottom.textContent = '';
+    lastOperator = '';
 });
 
 clearButton.addEventListener('click', () => {
-    resetDisplay();
-    displayBottom.textContent = '0';
+    if (lastOperator !== '=') {
+        displayBottom.textContent = displayBottom.textContent.slice(0, -1);
+    }
 });
 
-function resetDisplay() {
-    displayBottom.textContent = '';
-    displayTop.textContent = '';
-    displayMiddle.textContent = '';
-};
+decimalButton.addEventListener('click', () => {
+    if (!displayBottom.textContent.includes('.')
+        && lastOperator !== '=') {
+        displayBottom.textContent += '.';
+    }
+});
 
 function operate(operator, a, b) {
     a = Number(a);
@@ -74,7 +96,6 @@ function operate(operator, a, b) {
             if (b === Number(0)) {
                 displayMiddle.textContent = '';
                 alert("You can't divide by 0!");
-                return null;
             }
             else return divide(a, b);
     }
@@ -95,8 +116,3 @@ function multiply(a, b) {
 function divide(a, b) {
     return a / b;
 };
-
-
-
-
-
