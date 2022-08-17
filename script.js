@@ -11,38 +11,42 @@ let displayMiddle = document.querySelector('#display-middle');
 let displayBottom = document.querySelector('#display-bottom');
 
 numberButtons.forEach(button => {
+    button.addEventListener('click', () => addNumber(button.textContent))
+});
 
-    button.addEventListener('click', () => {
-        if (lastOperator !== '=') {
-            displayBottom.textContent += button.textContent;
-        }
+function addNumber(number) {
+    if (lastOperator !== '=') {
+        displayBottom.textContent += number;
+    }
 
-        if (displayBottom.textContent.length > 16) {
-            displayBottom.textContent = displayBottom.textContent.substring(0, 16);
-        }
-    })
-}
-);
+    if (displayBottom.textContent.length > 16) {
+        displayBottom.textContent = displayBottom.textContent.substring(0, 16);
+    }
+};
 
 operatorButtons.forEach(button =>
-    button.addEventListener('click', () => {
+    button.addEventListener('click', () => addOperator(button.textContent)
+    ));
 
-        if (displayTop.textContent === '' && displayBottom.textContent !== '') {
-            displayTop.textContent = displayBottom.textContent;
-            displayBottom.textContent = '';
-            displayMiddle.textContent = button.textContent;
-            lastOperator = button.textContent;
-        }
-        else if (displayBottom.textContent !== ''
-            && displayBottom.textContent !== '.') {
-            displayTop.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
-            displayMiddle.textContent = button.textContent;
-            displayBottom.textContent = '';
-            lastOperator = button.textContent;
-        }
-    }));
+function addOperator(operator) {
+    if (displayTop.textContent === '' && displayBottom.textContent !== '') {
+        displayTop.textContent = displayBottom.textContent;
+        displayBottom.textContent = '';
+        displayMiddle.textContent = operator;
+        lastOperator = operator;
+    }
+    else if (displayBottom.textContent !== ''
+        && displayBottom.textContent !== '.') {
+        displayTop.textContent = operate(lastOperator, displayTop.textContent, displayBottom.textContent);
+        displayMiddle.textContent = operator;
+        displayBottom.textContent = '';
+        lastOperator = operator;
+    }
+};
 
-equalsButton.addEventListener('click', () => {
+equalsButton.addEventListener('click', () => doFinalCalculation());
+
+function doFinalCalculation() {
     if (displayTop.textContent !== ''
         && displayBottom.textContent !== ''
         && displayBottom.textContent !== '.') {
@@ -60,27 +64,46 @@ equalsButton.addEventListener('click', () => {
         displayMiddle.textContent = '';
         lastOperator = '=';
     }
-});
+};
 
-allClearButton.addEventListener('click', () => {
+allClearButton.addEventListener('click', () => clearAll());
+
+function clearAll() {
     displayTop.textContent = '';
     displayMiddle.textContent = '';
     displayBottom.textContent = '';
     lastOperator = '';
-});
+};
 
-clearButton.addEventListener('click', () => {
+clearButton.addEventListener('click', () => deleteLastNumber());
+
+function deleteLastNumber() {
     if (lastOperator !== '=') {
         displayBottom.textContent = displayBottom.textContent.slice(0, -1);
     }
-});
+};
 
-decimalButton.addEventListener('click', () => {
+decimalButton.addEventListener('click', () => addDecimal());
+
+function addDecimal() {
     if (!displayBottom.textContent.includes('.')
         && lastOperator !== '=') {
         displayBottom.textContent += '.';
     }
-});
+};
+
+window.addEventListener('keydown', getKey);
+function getKey(e) {
+    if (e.key >= 0 && e.key <= 9) addNumber(e.key);
+    if (e.key === '+') addOperator('+');
+    if (e.key === '-') addOperator('-');
+    if (e.key === '*') addOperator('x');
+    if (e.key === '/') addOperator('÷');
+    if (e.key === 'Escape') clearAll();
+    if (e.key === 'Backspace') deleteLastNumber();
+    if (e.key === '.') addDecimal();
+    if (e.key === 'Enter' || e.key === '=') doFinalCalculation();
+};
 
 function operate(operator, a, b) {
     a = Number(a);
