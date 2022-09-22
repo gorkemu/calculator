@@ -1,7 +1,11 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -117,4 +121,10 @@ button {
 
 #plus {
     grid-row: auto / span 2;
+}
+
+@media screen and (max-width: 400px) {
+    .calculator {
+        width: 360px;
+    }
 }
